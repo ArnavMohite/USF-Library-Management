@@ -1,131 +1,158 @@
-namespace ISM6225_Competition2
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+// --- Base Class ---
+public class Person
 {
-    public class Person
-    {
-        // Properties common to all persons
-        public string Name;
-        public string ID;
-        public string Email;
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string ID { get; set; }
 
-        // Constructor
-        public Person(string name, string id, string email)
-        {
-            Name = name;
-            ID = id;
-            Email = email;
-        }
+    public Person(string name, string email, string id)
+    {
+        Name = name;
+        Email = email;
+        ID = id;
+    }
+}
+
+// --- Inherited Class: Student ---
+public class Student : Person
+{
+    public string Major { get; set; }
+    public int GraduationYear { get; set; }
+
+    public Student(string name, string email, string id, string major, int graduationYear)
+        : base(name, email, id) // Calls the constructor of the base class (Person)
+    {
+        Major = major;
+        GraduationYear = graduationYear;
+    }
+}
+
+// --- Inherited Class: Staff ---
+public class Staff : Person
+{
+    public string Position { get; set; }
+    public string Department { get; set; }
+
+    public Staff(string name, string email, string id, string position, string department)
+        : base(name, email, id) // Calls the Person constructor
+    {
+        Position = position;
+        Department = department;
+    }
+}
+
+// --- Book Class ---
+public class Book
+{
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public string ISBN { get; set; }
+    public int AvailableCopies { get; set; }
+
+    public Book(string title, string author, string isbn, int availableCopies)
+    {
+        Title = title;
+        Author = author;
+        ISBN = isbn;
+        AvailableCopies = availableCopies;
     }
 
-
-    public class Student : Person
+    // Method to handle borrowing
+    public void BorrowBook()
     {
-        // Additional properties specific to students
-        public string Major;
-        public int GraduationYear;
-
-        // Constructor
-        public Student(string name, string id, string email, string major, int year)
-            : base(name, id, email)
+        if (AvailableCopies > 0)
         {
-            Major = major;
-            GraduationYear = year;
+            AvailableCopies--;
         }
     }
+}
 
-    public class Staff : Person
+// --- Library Class ---
+public class Library
+{
+    private List<Book> books = new List<Book>();
+    private List<Person> patrons = new List<Person>();
+
+    // Method to add a book to the library's collection
+    public void AddBook(Book book)
     {
-        // Additional properties specific to staff
-        public string Position;
-        public string Department;
-
-        // Constructor
-        public Staff(string name, string id, string email, string position, string department)
-            : base(name, id, email)
-        {
-            Position = position;
-            Department = department;
-        }
+        books.Add(book);
     }
-    public class Book
+
+    // Method to add a patron (Student or Staff)
+    public void AddPatron(Person person)
     {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string ISBN { get; set; }
-        public int AvailableCopies { get; set; }
-
-        public Book(string title, string author, string isbn, int availableCopies)
-        {
-            Title = title;
-            Author = author;
-            ISBN = isbn;
-            AvailableCopies = availableCopies;
-        }
-
-        // Method to handle borrowing
-        public void BorrowBook()
-        {
-            if (AvailableCopies > 0)
-            {
-                AvailableCopies--;
-            }
-        }
+        patrons.Add(person);
     }
-    public class Library
+
+    // Method to display all books
+    public void DisplayBooks()
     {
-        public List<Book> Books { get; } = new List<Book>();
-        public List<Person> Patrons { get; } = new List<Person>();
-
-        public void AddBook(Book book) => Books.Add(book);
-
-        public void AddPatron(Person patron) => Patrons.Add(patron);
-
-        public void DisplayBooks()
+        Console.WriteLine("Books in Library:");
+        foreach (var book in books)
         {
-            Console.WriteLine("Books in Library:");
-            foreach (var book in Books)
-            {
-                Console.WriteLine(book.ToString());
-            }
-            Console.WriteLine();
+            Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, Available Copies: {book.AvailableCopies}");
         }
+        Console.WriteLine(); // For spacing
+    }
 
-        public void DisplayPatrons()
+    // Method to display all patrons
+    public void DisplayPatrons()
+    {
+        Console.WriteLine("Patrons in Library:");
+        foreach (var patron in patrons)
         {
-            Console.WriteLine("Patrons in Library:");
-            foreach (var p in Patrons)
-            {
-                Console.WriteLine($"Name: {p.Name}, ID: {p.ID}");
-            }
-            Console.WriteLine();
+            Console.WriteLine($"Name: {patron.Name}, ID: {patron.ID}");
         }
+        Console.WriteLine(); // For spacing
+    }
+}
 
-        // Borrow by patron ID and book title (case-insensitive). Returns true if borrow successful.
-        public bool BorrowBookByTitle(string patronId, string title)
-        {
-            var patron = Patrons.FirstOrDefault(p => p.ID.Equals(patronId, StringComparison.OrdinalIgnoreCase));
-            if (patron == null)
-            {
-                Console.WriteLine($"Patron with ID {patronId} not found.");
-                return false;
-            }
+// --- Main Program Execution ---
+class Program
+{
+    static void Main(string[] args)
+    {
+        // 1. Create the Library object
+        Library usfLibrary = new Library();
 
-            var book = Books.FirstOrDefault(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
-            if (book == null)
-            {
-                Console.WriteLine($"Book '{title}' not found in library.");
-                return false;
-            }
+        // 2. Create and add books to the library
+        Book book1 = new Book("The Art of Data Strategy", "Liam Reynolds", "ISBN111", 4);
+        Book book2 = new Book("Business Insights with AI", "Olivia Carter", "ISBN222", 3);
+        Book book3 = new Book("Analytics in Action", "Nathan Brooks", "ISBN333", 6);
+        usfLibrary.AddBook(book1);
+        usfLibrary.AddBook(book2);
+        usfLibrary.AddBook(book3);
 
-            if (book.BorrowBook())
-            {
-                Console.WriteLine($"{patron.Name} borrowed '{book.Title}'");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"No available copies of '{book.Title}' to borrow.");
-                return false;
-            }
-        }
+        // 3. Create and add patrons (students and staff) to the library
+        Student student1 = new Student("Akhil", "akhil@usf.edu", "S001", "Business Analytics", 2026);
+        Student student2 = new Student("Sandeep", "sandeep@usf.edu", "S002", "Information Systems", 2025);
+        Staff staff1 = new Staff("Grandon Gill", "grandon@usf.edu", "ST001", "Librarian", "Library Services");
+        usfLibrary.AddPatron(student1);
+        usfLibrary.AddPatron(student2);
+        usfLibrary.AddPatron(staff1);
+
+        // 4. Display the initial state of the library
+        usfLibrary.DisplayBooks();
+        usfLibrary.DisplayPatrons();
+        
+        // 5. Implement the borrowing scenario
+        Console.WriteLine("Borrowing Books...");
+        // Sandeep borrows "Business Insights with AI"
+        book2.BorrowBook();
+        Console.WriteLine("Sandeep borrowed 'Business Insights with AI'");
+
+        // Akhil borrows "Analytics in Action"
+        book3.BorrowBook();
+        Console.WriteLine("Akhil borrowed 'Analytics in Action'");
+        
+        Console.WriteLine("\nBooks after borrowing:");
+        
+        // 6. Display the final state of the library
+        usfLibrary.DisplayBooks();
     }
 }
