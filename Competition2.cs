@@ -13,6 +13,7 @@ namespace ISM6225_Competition2
             Name = name;
             ID = id;
             Email = email;
+            }
         }
     }
 
@@ -45,30 +46,27 @@ namespace ISM6225_Competition2
             Department = department;
         }
     }
-}
-
-// File: Book.cs
-public class Book
-{
-    public string Title { get; set; }
-    public string Author { get; set; }
-    public string ISBN { get; set; }
-    public int AvailableCopies { get; set; }
-
-    public Book(string title, string author, string isbn, int availableCopies)
+    public class Book
     {
-        Title = title;
-        Author = author;
-        ISBN = isbn;
-        AvailableCopies = availableCopies;
-    }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string ISBN { get; set; }
+        public int AvailableCopies { get; set; }
 
-    // Method to handle borrowing
-    public void BorrowBook()
-    {
-        if (AvailableCopies > 0)
+        public Book(string title, string author, string isbn, int availableCopies)
         {
-            AvailableCopies--;
+            Title = title;
+            Author = author;
+            ISBN = isbn;
+            AvailableCopies = availableCopies;
+        }
+
+        // Method to handle borrowing
+        public void BorrowBook()
+        {
+            if (AvailableCopies > 0)
+            {
+                AvailableCopies--;
+            }
         }
     }
-}
