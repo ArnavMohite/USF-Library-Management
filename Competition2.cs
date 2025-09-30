@@ -15,7 +15,7 @@ namespace ISM6225_Competition2
             Email = email;
         }
     }
-    
+
 
     public class Student : Person
     {
@@ -70,3 +70,62 @@ namespace ISM6225_Competition2
             }
         }
     }
+    public class Library
+    {
+        public List<Book> Books { get; } = new List<Book>();
+        public List<Person> Patrons { get; } = new List<Person>();
+
+        public void AddBook(Book book) => Books.Add(book);
+
+        public void AddPatron(Person patron) => Patrons.Add(patron);
+
+        public void DisplayBooks()
+        {
+            Console.WriteLine("Books in Library:");
+            foreach (var book in Books)
+            {
+                Console.WriteLine(book.ToString());
+            }
+            Console.WriteLine();
+        }
+
+        public void DisplayPatrons()
+        {
+            Console.WriteLine("Patrons in Library:");
+            foreach (var p in Patrons)
+            {
+                Console.WriteLine($"Name: {p.Name}, ID: {p.ID}");
+            }
+            Console.WriteLine();
+        }
+
+        // Borrow by patron ID and book title (case-insensitive). Returns true if borrow successful.
+        public bool BorrowBookByTitle(string patronId, string title)
+        {
+            var patron = Patrons.FirstOrDefault(p => p.ID.Equals(patronId, StringComparison.OrdinalIgnoreCase));
+            if (patron == null)
+            {
+                Console.WriteLine($"Patron with ID {patronId} not found.");
+                return false;
+            }
+
+            var book = Books.FirstOrDefault(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+            if (book == null)
+            {
+                Console.WriteLine($"Book '{title}' not found in library.");
+                return false;
+            }
+
+            if (book.BorrowBook())
+            {
+                Console.WriteLine($"{patron.Name} borrowed '{book.Title}'");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"No available copies of '{book.Title}' to borrow.");
+                return false;
+            }
+        }
+    }
+}
