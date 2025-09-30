@@ -15,7 +15,7 @@ namespace ISM6225_Competition2
             Email = email;
             }
         }
-    }
+    
 
     public class Student : Person
     {
