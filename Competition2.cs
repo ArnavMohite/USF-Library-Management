@@ -30,4 +30,19 @@ namespace ISM6225_Competition2
             GraduationYear = year;
         }
     }
+
+    public class Staff : Person
+    {
+        // Additional properties specific to staff
+        public string Position;
+        public string Department;
+
+        // Constructor
+        public Staff(string name, string id, string email, string position, string department)
+            : base(name, id, email)
+        {
+            Position = position;
+            Department = department;
+        }
+    }
 }
