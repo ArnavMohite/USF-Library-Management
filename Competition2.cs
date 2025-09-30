@@ -13,8 +13,8 @@ namespace ISM6225_Competition2
             Name = name;
             ID = id;
             Email = email;
-            }
         }
+    }
     
 
     public class Student : Person
